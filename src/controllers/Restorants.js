@@ -20,9 +20,19 @@ const Helpers_1 = __importDefault(require("../helpers/Helpers"));
 class Restorans {
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            let { city, name } = req.query;
+            let searchQuery = {};
+            if (city !== undefined) {
+                searchQuery["city"] = city;
+            }
+            if (name !== undefined) {
+                searchQuery["name"] = name;
+            }
             let respuesta;
             try {
-                let restaurants = yield typeorm_1.getRepository(Restorants_1.default).find();
+                let restaurants = yield typeorm_1.getRepository(Restorants_1.default).find({
+                    where: searchQuery,
+                });
                 if (restaurants.length) {
                     respuesta = {
                         code: 200,

@@ -7,9 +7,22 @@ import Helpers from "../helpers/Helpers";
 
 class Restorans {
   async index(req: Request, res: Response): Promise<Response> {
+    let { city, name } = req.query;
+    let searchQuery: { [key: string]: any } = {};
+
+    if (city !== undefined) {
+      searchQuery["city"] = city;
+    }
+
+    if (name !== undefined) {
+      searchQuery["name"] = name;
+    }
+
     let respuesta;
     try {
-      let restaurants = await getRepository(RestauransModel).find();
+      let restaurants = await getRepository(RestauransModel).find({
+        where: searchQuery,
+      });
       if (restaurants.length) {
         respuesta = {
           code: 200,
@@ -163,7 +176,6 @@ class Restorans {
     }
     return res.status(respuesta.code).json(respuesta);
   }
-
   async reserve(req: Request, res: Response): Promise<Response> {
     let respuesta;
 
